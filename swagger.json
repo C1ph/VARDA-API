@@ -1,0 +1,83 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "0.1",
+    "title" : "VARES API",
+    "description" : "Varhaiskasvatuksen tietovarannon API, nauru versio"
+  },
+  "host" : "localhost:10010",
+  "basePath" : "/api",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/students/{oid}" : {
+      "get" : {
+        "x-swagger-router-controller" : "students",
+        "operationId" : "getstudent",
+        "description" : "Get basic attributes of one OID identified student. Basic attributes contains: first name, lastname, hetu (crypted), OID",
+        "tags" : [ "students" ],
+        "parameters" : [ {
+          "name" : "oid",
+          "description" : "wanted OID",
+          "in" : "path",
+          "type" : "string",
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response",
+            "schema" : {
+              "type" : "object",
+              "items" : {
+                "$ref" : "#/definitions/Student"
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Student" : {
+      "type" : "object",
+      "required" : [ "oid" ],
+      "properties" : {
+        "oid" : {
+          "type" : "string"
+        },
+        "last_name" : {
+          "type" : "string"
+        },
+        "first_name" : {
+          "type" : "string"
+        },
+        "lang" : {
+          "type" : "string",
+          "description" : "language code such as 'de' (ISO 3166-1)"
+        },
+        "hetu" : {
+          "type" : "string",
+          "pattern" : "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$"
+        }
+      }
+    },
+    "Error" : {
+      "type" : "object",
+      "required" : [ "code", "message" ],
+      "properties" : {
+        "code" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "message" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
